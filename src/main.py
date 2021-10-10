@@ -92,7 +92,9 @@ def main() -> None:
 
     embed = parser.add_argument_group(title='Embed', description='Attach an embed to the message')
     embed.add_argument('-et', '--embedtitle', type=str, default=None, help='Title of embed object')
-    embed.add_argument('-ed', '--embeddescription', type=str, default=None, help='Description of embed object')
+    embed.add_argument(
+        '-ed', '--embeddescription', type=str, default=None, help='Description of embed object'
+    )
     embed.add_argument('-eu', '--embedurl', type=str, default=None, help='URL of embed object')
     embed.add_argument('-ec', '--embedcolor', type=str, default=None, help='Color of embed object')
 
