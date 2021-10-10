@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import sys
 
 import requests
 from gooey import Gooey
@@ -23,11 +24,11 @@ def send_webhook(
 ) -> None:
     if not content:
         print('Content must be specified')
-        exit()
+        sys.exit()
 
     if not validate_webhook(url):
         print('Webhook URL is invalid')
-        exit()
+        sys.exit()
 
     data = {
         'content': content,
@@ -36,7 +37,7 @@ def send_webhook(
     resp = requests.post(url, json=data)
     if not 200 <= resp.status_code < 300:
         print(f'Request returned {resp.status_code}')
-        exit()
+        sys.exit()
     print('Message sent successfully')
 
 
@@ -45,12 +46,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
     parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL (str)')
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
-    parser.add_argument('-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)')
+    parser.add_argument(
+        '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)'
+    )
     args = parser.parse_args()
 
     if not args.content:
         print('Content must be specified')
-        exit()
+        sys.exit()
 
     send_webhook(args.url, args.content)
 
