@@ -16,7 +16,11 @@ def validate_webhook(url: str) -> bool:
     return resp.get('code') is None
 
 
-def send_webhook(url: str, content: str = None) -> None:
+def send_webhook(
+        url: str,
+        content: str = None,
+        tts: bool = False
+) -> None:
     if not content:
         print('Content must be specified')
         exit()
@@ -27,6 +31,7 @@ def send_webhook(url: str, content: str = None) -> None:
 
     data = {
         'content': content,
+        'tts': tts
     }
     resp = requests.post(url, json=data)
     if not 200 <= resp.status_code < 300:
@@ -38,8 +43,9 @@ def send_webhook(url: str, content: str = None) -> None:
 @Gooey(program_name='Webhook.py')
 def main() -> None:
     parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
-    parser.add_argument('-u', '--url', type=str, help='Webhook URL', required=True)
+    parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL (str)')
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
+    parser.add_argument('-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)')
     args = parser.parse_args()
 
     if not args.content:
