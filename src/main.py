@@ -20,7 +20,8 @@ def validate_webhook(url: str) -> bool:
 def send_webhook(
         url: str,
         content: str = None,
-        tts: bool = False
+        tts: bool = False,
+        username: str = None
 ) -> None:
     if not content:
         print('Content must be specified')
@@ -34,6 +35,10 @@ def send_webhook(
         'content': content,
         'tts': tts
     }
+    if username:
+        data['username'] = username
+    print(data)
+
     resp = requests.post(url, json=data)
     if not 200 <= resp.status_code < 300:
         print(f'Request returned {resp.status_code}')
@@ -46,6 +51,7 @@ def main() -> None:
     parser = GooeyParser(description='A python GUI for sending Discord webhooks')
     parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL')
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content')
+    parser.add_argument('--username', type=str, default=None, help='Custom hook username')
     parser.add_argument(
         '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS',
         widget='Listbox', nargs='+', default=False
@@ -56,7 +62,7 @@ def main() -> None:
         print('Content must be specified')
         sys.exit()
 
-    send_webhook(args.url, args.content)
+    send_webhook(args.url, args.content, args.tts[0], args.username)
 
 
 if __name__ == '__main__':
