@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import argparse
 import re
 import sys
 
 import requests
 from gooey import Gooey
+from gooey import GooeyParser
 
 
 def validate_webhook(url: str) -> bool:
@@ -43,11 +43,12 @@ def send_webhook(
 
 @Gooey(program_name='Webhook.py')
 def main() -> None:
-    parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
+    parser = GooeyParser(description='A python GUI for sending Discord webhooks')
     parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL (str)')
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
     parser.add_argument(
-        '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)'
+        '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)',
+        widget='Listbox', nargs='+', default=False
     )
     args = parser.parse_args()
 
