@@ -44,10 +44,10 @@ def send_webhook(
 @Gooey(program_name='Webhook.py')
 def main() -> None:
     parser = GooeyParser(description='A python GUI for sending Discord webhooks')
-    parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL (str)')
-    parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
+    parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL')
+    parser.add_argument('-c', '--content', type=str, default=None, help='Message content')
     parser.add_argument(
-        '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS (bool)',
+        '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS',
         widget='Listbox', nargs='+', default=False
     )
     args = parser.parse_args()
