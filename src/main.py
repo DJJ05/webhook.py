@@ -10,28 +10,36 @@ def validate_webhook(url: str) -> bool:
     return True if not resp.get('code') else False
 
 
-def send_webhook(url: str, content: str = None, file: bytes = None) -> None:
-    if not (content or file):
-        err = 'One of content or file must be specified'
+def send_webhook(url: str, content: str = None) -> None:
+    if not content:
+        err = 'Content must be specified'
         raise TypeError(err)
+
+    if not validate_webhook(url):
+        err = 'Webhook URL is invalid'
+        raise TypeError(err)
+
+    data = {
+        'content': content,
+    }
+    resp = requests.post(url, json=data)
+    if not 200 <= resp.status_code < 300:
+        err = f'Request returned {resp.status_code}'
+        raise Exception(err)
 
 
 def main(args: argparse.Namespace) -> None:
-    if not (args.content or args.file):
-        err = 'One of content or file must be specified'
+    if not args.content:
+        err = 'Content must be specified'
         raise TypeError(err)
 
-    if args.file:
-        args.file = args.file.read()
+    send_webhook(args.url, args.content)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
     parser.add_argument('-u', '--url', type=str, help='Webhook URL', required=True)
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
-    parser.add_argument(
-        '-f', '--file', type=argparse.FileType('rb'), default=None, help='File to attach (path)'
-    )
 
     _args = parser.parse_args()
     main(_args)
