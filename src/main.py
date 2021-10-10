@@ -3,6 +3,7 @@
 import argparse
 
 import requests
+from gooey import Gooey
 
 
 def validate_webhook(url: str) -> bool:
@@ -28,7 +29,13 @@ def send_webhook(url: str, content: str = None) -> None:
         raise Exception(err)
 
 
-def main(args: argparse.Namespace) -> None:
+@Gooey(program_name='Webhook.py')
+def main() -> None:
+    parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
+    parser.add_argument('-u', '--url', type=str, help='Webhook URL', required=True)
+    parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
+    args = parser.parse_args()
+
     if not args.content:
         err = 'Content must be specified'
         raise TypeError(err)
@@ -37,9 +44,4 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
-    parser.add_argument('-u', '--url', type=str, help='Webhook URL', required=True)
-    parser.add_argument('-c', '--content', type=str, default=None, help='Message content (str)')
-
-    _args = parser.parse_args()
-    main(_args)
+    main()
