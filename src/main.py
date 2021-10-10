@@ -21,7 +21,8 @@ def send_webhook(
         url: str,
         content: str = None,
         tts: bool = False,
-        username: str = None
+        username: str = None,
+        avatar_url: str = None
 ) -> None:
     if not content:
         print('Content must be specified')
@@ -37,7 +38,14 @@ def send_webhook(
     }
     if username:
         data['username'] = username
-    print(data)
+    if avatar_url:
+        if not re.match(
+                r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})',
+                avatar_url
+        ):
+            print(f'Invalid avatar URL')
+            sys.exit()
+        data['avatar_url'] = avatar_url
 
     resp = requests.post(url, json=data)
     if not 200 <= resp.status_code < 300:
@@ -52,6 +60,7 @@ def main() -> None:
     parser.add_argument('-u', '--url', type=str, required=True, help='Webhook URL')
     parser.add_argument('-c', '--content', type=str, default=None, help='Message content')
     parser.add_argument('--username', type=str, default=None, help='Custom hook username')
+    parser.add_argument('-a', '--avatar', type=str, default=None, help='Custom hook avatar URL')
     parser.add_argument(
         '-t', '--tts', type=bool, choices=(True, False), help='Whether message is TTS',
         widget='Listbox', nargs='+', default=False
@@ -62,7 +71,7 @@ def main() -> None:
         print('Content must be specified')
         sys.exit()
 
-    send_webhook(args.url, args.content, args.tts[0], args.username)
+    send_webhook(args.url, args.content, args.tts[0], args.username, args.avatar)
 
 
 if __name__ == '__main__':
