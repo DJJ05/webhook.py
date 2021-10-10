@@ -7,7 +7,7 @@ import requests
 
 def validate_webhook(url: str) -> bool:
     resp = requests.get(url).json()
-    return True if not resp.get('code') else False
+    return resp.get('code') is None
 
 
 def send_webhook(url: str, content: str = None) -> None:
