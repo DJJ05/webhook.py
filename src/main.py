@@ -8,6 +8,9 @@ def main(args: argparse.Namespace) -> None:
         err = 'One of content or file must be specified'
         raise TypeError(err)
 
+    if args.file:
+        args.file = args.file.read()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='A python GUI for sending Discord webhooks')
